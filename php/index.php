@@ -213,7 +213,8 @@
                 </main>
 
                 <?php
-                // Gestion equipe pedago
+
+                // Gestion equipe pedagogique
                 if (isset($_GET["page"]) && $_GET["page"] == "equipe-pedagogique") {
                 ?>
                     <main>
@@ -234,6 +235,22 @@
                                 <label for="telPedago">Numéro teléphone :</label>
                                 <input type="tel" name="telPedago" id="telPedago">
 
+                                <label for="idRole">Séléctionnez un rôle</label>
+                                <select name="role" id="idRole">
+                                    <option value="" hidden>Rôle</option>
+                                    <?php
+
+                                    $sql = "SELECT `id_role`, `nom_role` FROM role";
+                                    $requete = $bdd->query($sql);
+                                    $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+                                    foreach ($results as $value) {
+                                        echo '<option value="' . $value['id_role'] .  '">' . $value['nom_role'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+
+
                                 <input type="submit" name="submitPedago" value="Ajouter">
                             </fieldset>
                         </form>
@@ -244,8 +261,9 @@
                             $prenomPedago = $_POST['prenomPedago'];
                             $mailPedago = $_POST['mailPedago'];
                             $telPedago = $_POST['telPedago'];
+                            $role = $_POST['role'];
 
-                            $sql = "INSERT INTO `pedagogie`(`nom_pedagogie`, `prenom_pedagogie`, `mail_pedagogie`, `num_pedagogie`) VALUES ('$nomPedago','$prenomPedago','$mailPedago','$telPedago')";
+                            $sql = "INSERT INTO `pedagogie`(`nom_pedagogie`, `prenom_pedagogie`, `mail_pedagogie`, `num_pedagogie`, `id_role`) VALUES ('$nomPedago','$prenomPedago','$mailPedago','$telPedago','$role')";
                             $bdd->query($sql);
                             echo "data ajoutée dans la bdd";
                         }
@@ -284,8 +302,62 @@
                                 <fieldset>
                                     <legend>Ajouter des sessions</legend>
 
+                                    <label for="nomSession">Nom de la session :</label>
+                                    <input type="text" name="nomSession" id="nomSession">
+
                                     <label for="debutSession">Date de début :</label>
                                     <input type="date" name="debutSession" id="debutSession">
+
+                                    <label for="idCentre">Séléctionnez un centre</label>
+                                    <select name="centre" id="idCentre">
+                                        <option value="" hidden>Nom du centre</option>
+                                        <?php
+
+                                        $sql = "SELECT `id_centre`, `ville_centre` FROM centres";
+                                        $requete = $bdd->query($sql);
+                                        $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+                                        foreach ($results as $value) {
+                                            echo '<option value="' . $value['id_centre'] .  '">' . 'AFCI' . ' - ' . $value['ville_centre'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+
+                                    <label for="idFormation">Séléctionnez une formation</label>
+                                    <select name="formation" id="idFormation">
+                                        <option value="" hidden>Nom de la formation</option>
+                                        <?php
+
+
+                                        $sql = "SELECT `id_formation`, `nom_formation` FROM formations";
+                                        $requete = $bdd->query($sql);
+                                        $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+                                        foreach ($results as $value) {
+                                            echo '<option value="' . $value['id_formation'] .  '">' . $value['nom_formation'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+
+                                    <label for="idFormateur">Séléctionner un formateur</label>
+                                    <select name="formateur" id="idFormateur">
+                                        <option value="" hidden>Formateur</option>
+                                        <?php
+
+                                        $sql = "SELECT `id_pedagogie`, CONCAT(`nom_pedagogie`, ' ', `prenom_pedagogie`) 
+                                        AS `formateur`
+                                        FROM `pedagogie`
+                                        INNER JOIN `role` 
+                                        ON pedagogie.id_role = role.id_role
+                                        WHERE `nom_role` = 'Formateur'";
+                                        $requete = $bdd->query($sql);
+                                        $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+                                        foreach ($results as $value) {
+                                            echo '<option value="' . $value['id_pedagogie'] .  '">' . $value['formateur'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
 
                                     <input type="submit" name="submitSession" value="Ajouter">
                                 </fieldset>
@@ -293,9 +365,13 @@
 
                             <?php
                             if (isset($_POST['submitSession'])) {
+                                $nomSession = $_POST['nomSession'];
                                 $debutSession = $_POST['debutSession'];
+                                $centre = $_POST['centre'];
+                                $formation = $_POST['formation'];
+                                $formateur = $_POST['formateur'];
 
-                                $sql = "INSERT INTO `session`(`date_debut`) VALUES ('$debutSession')";
+                                $sql = "INSERT INTO `session`(`nom_session`, `date_debut`, `id_centre`, `id_pedagogie`, `id_formation` ) VALUES ('$nomSession', '$debutSession', $centre, $formation, $formateur)";
                                 $bdd->query($sql);
 
                                 echo "data ajoutée dans la bdd";
