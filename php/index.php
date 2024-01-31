@@ -70,18 +70,14 @@
             <?php
 
             // Lire des données dans la BDD
-            $sql = "SELECT * FROM role";
+            $sql = "SELECT `nom_role` FROM role";
             $requete = $bdd->query($sql);
             $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($results as $value) {
-                foreach ($value as $key => $data) {
-                    if ($key !== 'id_role') {
-                        echo $data;
-                        echo "<br>";
-                    }
+                foreach ($value as $data) {
+                    echo '<p>' . $data . '</p>';
                 }
-                echo "<br>";
             }
         }
             ?>
@@ -130,28 +126,23 @@
                 <?php
 
                 // Lire des données dans la BDD centre
-                $sql = "SELECT * FROM centres";
+                $sql = "SELECT `ville_centre`, `adresse_centre`, `code_postal_centre` FROM centres";
                 $requete = $bdd->query($sql);
                 $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-
                 foreach ($results as $value) {
-                    foreach ($value as $key => $data) {
-                        if ($key !== 'id_centre') {
-                            echo $data;
-                            echo "<br>";
-                        }
+                    foreach ($value as $data) {
+                        echo '<p>' . $data . '</p>';
                     }
-                    echo "<br>";
                 }
             }
                 ?>
                 </article>
             </main>
             <?php
+
             // Gestion formation
             if (isset($_GET["page"]) && $_GET["page"] == "formations") {
-
             ?>
                 <main>
                     <h1>Gestion des formations</h1>
@@ -193,19 +184,14 @@
                     <?php
 
                     // Lire des données dans la BDD formations
-                    $sql = "SELECT * FROM formations";
+                    $sql = "SELECT `nom_formation`, `duree_formation`, `niveau_sortie_formation`, `description` FROM formations";
                     $requete = $bdd->query($sql);
                     $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-
                     foreach ($results as $value) {
-                        foreach ($value as $key => $data) {
-                            if ($key !== 'id_formation') {
-                                echo $data;
-                                echo "<br>";
-                            }
+                        foreach ($value as $data) {
+                            echo '<p>' . $data . '</p>';
                         }
-                        echo "<br>";
                     }
                 }
                     ?>
@@ -273,19 +259,14 @@
 
                         <?php
                         // Lire des données dans la BDD formations
-                        $sql = "SELECT * FROM pedagogie";
+                        $sql = "SELECT `nom_pedagogie`, `prenom_pedagogie`, `mail_pedagogie`, `num_pedagogie` FROM pedagogie";
                         $requete = $bdd->query($sql);
                         $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-
                         foreach ($results as $value) {
-                            foreach ($value as $key => $data) {
-                                if ($key !== 'id_pedagogie') {
-                                    echo $data;
-                                    echo "<br>";
-                                }
+                            foreach ($value as $data) {
+                                echo '<p>' . $data . '</p>';
                             }
-                            echo "<br>";
                         }
                     }
                         ?>
@@ -293,6 +274,7 @@
                     </main>
 
                     <?php
+                    
                     // Gestion sessions
                     if (isset($_GET["page"]) && $_GET["page"] == "sessions") {
                     ?>
@@ -318,7 +300,7 @@
                                         $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                                         foreach ($results as $value) {
-                                            echo '<option value="' . $value['id_centre'] .  '">' . 'AFCI' . ' - ' . $value['ville_centre'] . '</option>';
+                                            echo '<option value="' . $value['id_centre'] . '">' . 'AFCI' . ' - ' . $value['ville_centre'] . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -334,7 +316,7 @@
                                         $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                                         foreach ($results as $value) {
-                                            echo '<option value="' . $value['id_formation'] .  '">' . $value['nom_formation'] . '</option>';
+                                            echo '<option value="' . $value['id_formation'] . '">' . $value['nom_formation'] . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -354,7 +336,7 @@
                                         $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                                         foreach ($results as $value) {
-                                            echo '<option value="' . $value['id_pedagogie'] .  '">' . $value['formateur'] . '</option>';
+                                            echo '<option value="' . $value['id_pedagogie'] . '">' . $value['formateur'] . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -371,7 +353,7 @@
                                 $formation = $_POST['formation'];
                                 $formateur = $_POST['formateur'];
 
-                                $sql = "INSERT INTO `session`(`nom_session`, `date_debut`, `id_centre`, `id_pedagogie`, `id_formation` ) VALUES ('$nomSession', '$debutSession', $centre, $formation, $formateur)";
+                                $sql = "INSERT INTO `session`(`nom_session`, `date_debut`, `id_centre`, `id_pedagogie`, `id_formation` ) VALUES ('$nomSession', '$debutSession', $centre, $formateur, $formation)";
                                 $bdd->query($sql);
 
                                 echo "data ajoutée dans la bdd";
@@ -381,21 +363,17 @@
                                 <h2>Sessions</h2>
 
                             <?php
+
                             // Lire des données dans la BDD formations
-                            $sql = "SELECT * FROM session";
+                            $sql = "SELECT `nom_session`, `date_debut`, `ville_centre`, `nom_formation`, CONCAT(`nom_pedagogie`, ' ', `prenom_pedagogie`) AS `formateur` FROM session";
                             $requete = $bdd->query($sql);
                             $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-
                             foreach ($results as $value) {
-                                foreach ($value as $key => $data) {
-                                    if ($key !== 'id_session') {
-                                        echo $data;
-                                        echo "<br>";
-                                    }
-                                }
-                                echo "<br>";
+                            foreach ($value as $data) {
+                                echo '<p>' . $data . '</p>';
                             }
+                        }
                         }
                             ?>
                             </article>
