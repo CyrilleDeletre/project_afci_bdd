@@ -50,10 +50,10 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                                 // Créer la ligne du tableau pour chaque entrée
                                 echo '<tr>';
 
-                                // Affichage de la ville (échappement des données)
+                                // Affichage de la ville
                                 echo '<td>' . htmlspecialchars($value['ville_centre']) . '</td>';
 
-                                // Affichage de l'adresse (échappement des données)
+                                // Affichage de l'adresse
                                 echo '<td>' . htmlspecialchars($value['adresse_centre']) . '</td>';
 
                                 // Affichage du code postal
@@ -74,12 +74,52 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                 </fieldset>
             </form>
 
+            <form method="POST">
+                <fieldset>
+                    <legend>Les formations en cours</legend>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom de la formation</th>
+                                <th>Nom du centre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Récupérer les données depuis la base de données
+                            $sql = "SELECT nom_formation, CONCAT('AFCI - ', ville_centre) AS nom_centre   FROM localiser
+                                    INNER JOIN formations ON localiser.id_formation = formations.id_formation
+                                    INNER JOIN centres ON localiser.id_centre = centres.id_centre";
+                            $requete = $bdd->prepare($sql);
+                            $requete->execute();
+                            $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+                            // Afficher chaque ligne de la table
+                            foreach ($results as $value) {
+                                // Créer la ligne du tableau pour chaque entrée
+                                echo '<tr>';
+
+
+                                // Affichage de la formation
+                                echo '<td>' . htmlspecialchars($value['nom_formation']) . '</td>';
+
+                                // Affichage du centre
+                                echo '<td>' . htmlspecialchars($value['nom_centre']) . '</td>';
+
+                                // Fermeture de la ligne du tableau
+                                echo '</tr>';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+
             <?php
             if (isset($_POST['submitCentre'])) {
-                // Utilisation de la requête préparée pour l'insertion
-                $villeCentre = $_POST['villeCentre'];
-                $adresseCentre = $_POST['adresseCentre'];
-                $cpCentre = $_POST['cpCentre'];
+                $villeCentre = htmlspecialchars($_POST['villeCentre']);
+                $adresseCentre = htmlspecialchars($_POST['adresseCentre']);
+                $cpCentre = htmlspecialchars($_POST['cpCentre']);
 
                 $sql = "INSERT INTO `centres`(`ville_centre`, `adresse_centre`, `code_postal_centre`) 
                             VALUES (?, ?, ?)";
@@ -90,7 +130,6 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
             }
 
             if (isset($_POST['deleteCentre'])) {
-                // Utilisation de la requête préparée pour la suppression
                 $idCentreDelete = $_POST['deleteCentre'];
 
                 $sql = "DELETE FROM `centres` WHERE `id_centre` = ?";
@@ -110,6 +149,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                 $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
 
             ?>
+
                 <form method="POST">
                     <input type="hidden" name="updateIdCentre" value="<?php echo $resultsId['id_centre']; ?>">
                     <input type="text" name="updateVilleCentre" value="<?php echo htmlspecialchars($resultsId['ville_centre']); ?>">
@@ -121,11 +161,10 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
         <?php
 
                 if (isset($_POST['updateCentre'])) {
-                    // Utilisation de la requête préparée pour la mise à jour
                     $idCentreUpdate = $_POST['updateIdCentre'];
-                    $villeCentreUpdate = $_POST['updateVilleCentre'];
-                    $adresseCentreUpdate = $_POST['updateAdresseCentre'];
-                    $codePostalCentreUpdate = $_POST['updateCodePostalCentre'];
+                    $villeCentreUpdate = htmlspecialchars($_POST['updateVilleCentre']);
+                    $adresseCentreUpdate = htmlspecialchars($_POST['updateAdresseCentre']);
+                    $codePostalCentreUpdate = htmlspecialchars($_POST['updateCodePostalCentre']);
 
                     $sqlUpdate = "UPDATE `centres` 
                                 SET 
