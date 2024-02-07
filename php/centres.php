@@ -1,7 +1,7 @@
 <?php
 // Gestion centres
 if (isset($_GET["page"]) && $_GET["page"] == "centres") {
-    ?>
+?>
     <main>
         <h1>Gestion des centres</h1>
         <form method="POST">
@@ -29,46 +29,46 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                     <legend>Nos centres</legend>
                     <table>
                         <thead>
-                        <tr>
-                            <th>Ville</th>
-                            <th>Adresse</th>
-                            <th>Code Postal</th>
-                            <th>Modification</th>
-                            <th>Suppression</th>
-                        </tr>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Adresse</th>
+                                <th>Code Postal</th>
+                                <th>Modification</th>
+                                <th>Suppression</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <?php
-                        // Récupérer les données depuis la base de données
-                        $sql = "SELECT * FROM `centres`";
-                        $requete = $bdd->prepare($sql);
-                        $requete->execute();
-                        $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                            <?php
+                            // Récupérer les données depuis la base de données
+                            $sql = "SELECT * FROM `centres`";
+                            $requete = $bdd->prepare($sql);
+                            $requete->execute();
+                            $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-                        // Afficher chaque ligne de la table
-                        foreach ($results as $value) {
-                            // Créer la ligne du tableau pour chaque entrée
-                            echo '<tr>';
+                            // Afficher chaque ligne de la table
+                            foreach ($results as $value) {
+                                // Créer la ligne du tableau pour chaque entrée
+                                echo '<tr>';
 
-                            // Affichage de la ville (échappement des données)
-                            echo '<td>' . htmlspecialchars($value['ville_centre']) . '</td>';
+                                // Affichage de la ville (échappement des données)
+                                echo '<td>' . htmlspecialchars($value['ville_centre']) . '</td>';
 
-                            // Affichage de l'adresse (échappement des données)
-                            echo '<td>' . htmlspecialchars($value['adresse_centre']) . '</td>';
+                                // Affichage de l'adresse (échappement des données)
+                                echo '<td>' . htmlspecialchars($value['adresse_centre']) . '</td>';
 
-                            // Affichage du code postal
-                            echo '<td>' . htmlspecialchars($value['code_postal_centre']) . '</td>';
+                                // Affichage du code postal
+                                echo '<td>' . htmlspecialchars($value['code_postal_centre']) . '</td>';
 
-                            // Bouton Modifier
-                            echo '<td><a href="?page=centres&type=modifier&id=' . $value['id_centre'] . '" class="modifier">Modifier</a></td>';
+                                // Bouton Modifier
+                                echo '<td><a href="?page=centres&type=modifier&id=' . $value['id_centre'] . '" class="modifier">Modifier</a></td>';
 
-                            // Bouton Supprimer
-                            echo '<td><button type="submit" name="deleteCentre" value="' . $value['id_centre'] . '" class="supprimer">Supprimer</button></td>';
+                                // Bouton Supprimer
+                                echo '<td><button type="submit" name="deleteCentre" value="' . $value['id_centre'] . '" class="supprimer">Supprimer</button></td>';
 
-                            // Fermeture de la ligne du tableau
-                            echo '</tr>';
-                        }
-                        ?>
+                                // Fermeture de la ligne du tableau
+                                echo '</tr>';
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </fieldset>
@@ -109,7 +109,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                 $requeteId->execute([$id]);
                 $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
 
-                ?>
+            ?>
                 <form method="POST">
                     <input type="hidden" name="updateIdCentre" value="<?php echo $resultsId['id_centre']; ?>">
                     <input type="text" name="updateVilleCentre" value="<?php echo htmlspecialchars($resultsId['ville_centre']); ?>">
@@ -118,7 +118,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                     <input type="submit" name="updateCentre" value="Modifier">
                 </form>
 
-                <?php
+        <?php
 
                 if (isset($_POST['updateCentre'])) {
                     // Utilisation de la requête préparée pour la mise à jour
@@ -141,9 +141,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                     }
                 }
             }
-            ?>
+        }
+        ?>
         </article>
     </main>
-<?php
-}
-?>

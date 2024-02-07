@@ -1,5 +1,4 @@
 <?php
-
 // Gestion Apprenants
 if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
 ?>
@@ -27,7 +26,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                 <label for="codePostalApprenant">Code Postal</label>
                 <input type="number" name="codePostalApprenant" id="codePostalApprenant">
 
-                <label for="telephoneApprenant">Télephone</label>
+                <label for="telephoneApprenant">Téléphone</label>
                 <input type="tel" name="telephoneApprenant" id="telephoneApprenant">
 
                 <label for="dateDeNaissanceApprenant">Date de naissance</label>
@@ -47,15 +46,16 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
 
                 <label for="idSessionApprenant">Session</label>
                 <select name="sessionApprenant" id="idSessionApprenant">
-                    <option value="" hidden>Choissisez une session</option>
+                    <option value="" hidden>Choisissez une session</option>
 
                     <?php
                     $sql = "SELECT `id_session`, `nom_session` FROM `session`";
-                    $requete = $bdd->query($sql);
+                    $requete = $bdd->prepare($sql);
+                    $requete->execute();
                     $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($results as $value) {
-                        echo '<option value="' . $value['id_session'] .  '">' . $value['nom_session'] . '</option>';
+                        echo '<option value="' . htmlspecialchars($value['id_session']) . '">' . htmlspecialchars($value['nom_session']) . '</option>';
                     }
                     ?>
                 </select>
@@ -74,7 +74,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                         <thead>
                             <tr>
                                 <th>Nom</th>
-                                <th>Prenom</th>
+                                <th>Prénom</th>
                                 <th>Email</th>
                                 <th>Adresse</th>
                                 <th>Ville</th>
@@ -95,10 +95,11 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                             <?php
                             // Récupérer les données depuis la base de données
                             $sql = "SELECT apprenants.*, role.nom_role, session.nom_session
-                                                            FROM apprenants
-                                                            INNER JOIN role ON apprenants.id_role = role.id_role
-                                                            INNER JOIN session ON apprenants.id_session = session.id_session;";
-                            $requete = $bdd->query($sql);
+                                FROM apprenants
+                                INNER JOIN role ON apprenants.id_role = role.id_role
+                                INNER JOIN session ON apprenants.id_session = session.id_session;";
+                            $requete = $bdd->prepare($sql);
+                            $requete->execute();
                             $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                             // Afficher chaque ligne de la table
@@ -106,56 +107,56 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                                 // Créer la ligne du tableau pour chaque entrée
                                 echo '<tr>';
 
-                                // Input hiddent pour stocker l'ID de l'apprenant
-                                echo '<input type="hidden" name="hiddenApprenant" value="' . $value['id_apprenant'] . '">';
+                                // Input hidden pour stocker l'ID de l'apprenant
+                                echo '<input type="hidden" name="hiddenApprenant" value="' . htmlspecialchars($value['id_apprenant']) . '">';
 
                                 // Affichage du nom
-                                echo '<td>' . $value['nom_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['nom_apprenant']) . '</td>';
 
-                                // Affichage du prenom
-                                echo '<td>' . $value['prenom_apprenant'] . '</td>';
+                                // Affichage du prénom
+                                echo '<td>' . htmlspecialchars($value['prenom_apprenant']) . '</td>';
 
                                 // Affichage du mail
-                                echo '<td>' . $value['mail_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['mail_apprenant']) . '</td>';
 
                                 // Affichage de l'adresse
-                                echo '<td>' . $value['adresse_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['adresse_apprenant']) . '</td>';
 
                                 // Affichage de la ville
-                                echo '<td>' . $value['ville_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['ville_apprenant']) . '</td>';
 
                                 // Affichage du code postal
-                                echo '<td>' . $value['code_postal_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['code_postal_apprenant']) . '</td>';
 
                                 // Affichage du téléphone
-                                echo '<td>' . $value['tel_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['tel_apprenant']) . '</td>';
 
                                 // Affichage de la date de naissance
-                                echo '<td>' . $value['date_naissance_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['date_naissance_apprenant']) . '</td>';
 
                                 // Affichage du niveau
-                                echo '<td>' . $value['niveau_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['niveau_apprenant']) . '</td>';
 
                                 // Affichage du n° Pole Emploi
-                                echo '<td>' . $value['num_PE_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['num_PE_apprenant']) . '</td>';
 
-                                // Affichage du n° Sécurité social
-                                echo '<td>' . $value['num_secu_apprenant'] . '</td>';
+                                // Affichage du n° Sécurité sociale
+                                echo '<td>' . htmlspecialchars($value['num_secu_apprenant']) . '</td>';
 
                                 // Affichage du RIB
-                                echo '<td>' . $value['rib_apprenant'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['rib_apprenant']) . '</td>';
 
-                                // Affichage du role
-                                echo '<td>' . $value['nom_role'] . '</td>';
+                                // Affichage du rôle
+                                echo '<td>' . htmlspecialchars($value['nom_role']) . '</td>';
 
                                 // Affichage de la session
-                                echo '<td>' . $value['nom_session'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['nom_session']) . '</td>';
 
                                 // Bouton Modifier
-                                echo '<td><a href="?page=apprenants&type=modifier&id=' . $value['id_apprenant'] . '" class="modifier">Modifier</a></td>';
+                                echo '<td><a href="?page=apprenants&type=modifier&id=' . htmlspecialchars($value['id_apprenant']) . '" class="modifier">Modifier</a></td>';
 
                                 // Bouton Supprimer
-                                echo '<td><button type="submit" name="deleteApprenant" value="' . $value['id_apprenant'] . '" class="supprimer">Supprimer</button></td>';
+                                echo '<td><button type="submit" name="deleteApprenant" value="' . htmlspecialchars($value['id_apprenant']) . '" class="supprimer">Supprimer</button></td>';
 
                                 // Fermeture de la ligne du tableau
                                 echo '</tr>';
@@ -168,22 +169,21 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
 
             <?php
             if (isset($_POST['submitApprenant'])) {
-                $nomApprenant = $_POST['nomApprenant'];
-                $prenomApprenant = $_POST['prenomApprenant'];
-                $emailApprenant = $_POST['emailApprenant'];
-                $adresseApprenant = $_POST['adresseApprenant'];
-                $villeApprenant = $_POST['villeApprenant'];
-                $codePostalApprenant = $_POST['codePostalApprenant'];
-                $telephoneApprenant = $_POST['telephoneApprenant'];
-                $dateDeNaissanceApprenant = $_POST['dateDeNaissanceApprenant'];
-                $niveauApprenant = $_POST['niveauApprenant'];
-                $numeroPoleEmploiApprenant = $_POST['numeroPoleEmploiApprenant'];
-                $numeroSecuriteSocialeApprenant = $_POST['numeroSecuriteSocialeApprenant'];
-                $sessionApprenant = $_POST['sessionApprenant'];
-                $ribApprenant = $_POST['ribApprenant'];
+                $nomApprenant = htmlspecialchars($_POST['nomApprenant']);
+                $prenomApprenant = htmlspecialchars($_POST['prenomApprenant']);
+                $emailApprenant = htmlspecialchars($_POST['emailApprenant']);
+                $adresseApprenant = htmlspecialchars($_POST['adresseApprenant']);
+                $villeApprenant = htmlspecialchars($_POST['villeApprenant']);
+                $codePostalApprenant = htmlspecialchars($_POST['codePostalApprenant']);
+                $telephoneApprenant = htmlspecialchars($_POST['telephoneApprenant']);
+                $dateDeNaissanceApprenant = htmlspecialchars($_POST['dateDeNaissanceApprenant']);
+                $niveauApprenant = htmlspecialchars($_POST['niveauApprenant']);
+                $numeroPoleEmploiApprenant = htmlspecialchars($_POST['numeroPoleEmploiApprenant']);
+                $numeroSecuriteSocialeApprenant = htmlspecialchars($_POST['numeroSecuriteSocialeApprenant']);
+                $sessionApprenant = htmlspecialchars($_POST['sessionApprenant']);
+                $ribApprenant = htmlspecialchars($_POST['ribApprenant']);
 
-                $sql =
-                    "INSERT INTO `apprenants`(
+                $sql = "INSERT INTO `apprenants`(
                                         `nom_apprenant`, 
                                         `prenom_apprenant`, 
                                         `mail_apprenant`, 
@@ -200,69 +200,88 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                                         `rib_apprenant`
                                     ) 
                                     VALUES (
-                                        '$nomApprenant',
-                                        '$prenomApprenant',
-                                        '$emailApprenant',
-                                        '$adresseApprenant',
-                                        '$villeApprenant',
-                                        '$codePostalApprenant',
-                                        '$telephoneApprenant',
-                                        '$dateDeNaissanceApprenant',
-                                        '$niveauApprenant',
-                                        '$numeroPoleEmploiApprenant',
-                                        '$numeroSecuriteSocialeApprenant',
+                                        :nomApprenant,
+                                        :prenomApprenant,
+                                        :emailApprenant,
+                                        :adresseApprenant,
+                                        :villeApprenant,
+                                        :codePostalApprenant,
+                                        :telephoneApprenant,
+                                        :dateDeNaissanceApprenant,
+                                        :niveauApprenant,
+                                        :numeroPoleEmploiApprenant,
+                                        :numeroSecuriteSocialeApprenant,
                                         4,
-                                        '$sessionApprenant',
-                                        '$ribApprenant'
+                                        :sessionApprenant,
+                                        :ribApprenant
                                     )";
 
-                $bdd->query($sql);
+                $requete = $bdd->prepare($sql);
+                $requete->bindParam(':nomApprenant', $nomApprenant);
+                $requete->bindParam(':prenomApprenant', $prenomApprenant);
+                $requete->bindParam(':emailApprenant', $emailApprenant);
+                $requete->bindParam(':adresseApprenant', $adresseApprenant);
+                $requete->bindParam(':villeApprenant', $villeApprenant);
+                $requete->bindParam(':codePostalApprenant', $codePostalApprenant);
+                $requete->bindParam(':telephoneApprenant', $telephoneApprenant);
+                $requete->bindParam(':dateDeNaissanceApprenant', $dateDeNaissanceApprenant);
+                $requete->bindParam(':niveauApprenant', $niveauApprenant);
+                $requete->bindParam(':numeroPoleEmploiApprenant', $numeroPoleEmploiApprenant);
+                $requete->bindParam(':numeroSecuriteSocialeApprenant', $numeroSecuriteSocialeApprenant);
+                $requete->bindParam(':sessionApprenant', $sessionApprenant);
+                $requete->bindParam(':ribApprenant', $ribApprenant);
+                $requete->execute();
 
-                echo "data ajoutée dans la bdd";
+                echo "Données ajoutées dans la base de données";
             }
 
             if (isset($_POST['deleteApprenant'])) {
-                $idApprenantDelete = $_POST['deleteApprenant'];
+                $idApprenantDelete = htmlspecialchars($_POST['deleteApprenant']);
 
-                $sql = "DELETE FROM `apprenants` WHERE `id_apprenant` = $idApprenantDelete";
-                if ($bdd->query($sql)) {
+                $sql = "DELETE FROM `apprenants` WHERE `id_apprenant` = :idApprenantDelete";
+                $requete = $bdd->prepare($sql);
+                $requete->bindParam(':idApprenantDelete', $idApprenantDelete);
+                if ($requete->execute()) {
                     echo "Le centre a été supprimé dans la BDD.";
                 } else {
                     echo "Erreur lors de la suppression du centre.";
                 }
             }
-            if (isset($_GET['type']) && $_GET['type'] == "modifier") {
-                $id = $_GET['id'];
-                $sqlId = "SELECT * FROM `apprenants` WHERE id_apprenant = $id";
-                $requeteId = $bdd->query($sqlId);
-                $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
 
-            ?>
+            if (isset($_GET['type']) && $_GET['type'] == "modifier") {
+                $id = htmlspecialchars($_GET['id']);
+                $sqlId = "SELECT * FROM `apprenants` WHERE id_apprenant = :id";
+                $requeteId = $bdd->prepare($sqlId);
+                $requeteId->bindParam(':id', $id);
+                $requeteId->execute();
+                $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
+                ?>
 
                 <form method="POST">
-                    <input type="hidden" name="updateIdApprenant" value="<?php echo $resultsId['id_apprenant']; ?>">
-                    <input type="text" name="updateNomApprenant" value="<?php echo $resultsId['nom_apprenant']; ?>">
-                    <input type="text" name="updatePrenomApprenant" value="<?php echo $resultsId['prenom_apprenant']; ?>">
-                    <input type="email" name="updateMailApprenant" value="<?php echo $resultsId['mail_apprenant']; ?>">
-                    <input type="text" name="updateAdresseApprenant" value="<?php echo $resultsId['adresse_apprenant']; ?>">
-                    <input type="text" name="updateVilleApprenant" value="<?php echo $resultsId['ville_apprenant']; ?>">
-                    <input type="number" name="updateCodePostalApprenant" value="<?php echo $resultsId['code_postal_apprenant']; ?>">
-                    <input type="tel" name="updateTelApprenant" value="<?php echo $resultsId['tel_apprenant']; ?>">
-                    <input type="date" name="updateDateNaissanceApprenant" value="<?php echo $resultsId['date_naissance_apprenant']; ?>">
-                    <input type="text" name="updateNiveauApprenant" value="<?php echo $resultsId['niveau_apprenant']; ?>">
-                    <input type="text" name="updateNumPEApprenant" value="<?php echo $resultsId['num_PE_apprenant']; ?>">
-                    <input type="text" name="updateNumSecuApprenant" value="<?php echo $resultsId['num_secu_apprenant']; ?>">
-                    <input type="text" name="updateRibApprenant" value="<?php echo $resultsId['rib_apprenant']; ?>">
+                    <input type="hidden" name="updateIdApprenant" value="<?php echo htmlspecialchars($resultsId['id_apprenant']); ?>">
+                    <input type="text" name="updateNomApprenant" value="<?php echo htmlspecialchars($resultsId['nom_apprenant']); ?>">
+                    <input type="text" name="updatePrenomApprenant" value="<?php echo htmlspecialchars($resultsId['prenom_apprenant']); ?>">
+                    <input type="email" name="updateMailApprenant" value="<?php echo htmlspecialchars($resultsId['mail_apprenant']); ?>">
+                    <input type="text" name="updateAdresseApprenant" value="<?php echo htmlspecialchars($resultsId['adresse_apprenant']); ?>">
+                    <input type="text" name="updateVilleApprenant" value="<?php echo htmlspecialchars($resultsId['ville_apprenant']); ?>">
+                    <input type="number" name="updateCodePostalApprenant" value="<?php echo htmlspecialchars($resultsId['code_postal_apprenant']); ?>">
+                    <input type="tel" name="updateTelApprenant" value="<?php echo htmlspecialchars($resultsId['tel_apprenant']); ?>">
+                    <input type="date" name="updateDateNaissanceApprenant" value="<?php echo htmlspecialchars($resultsId['date_naissance_apprenant']); ?>">
+                    <input type="text" name="updateNiveauApprenant" value="<?php echo htmlspecialchars($resultsId['niveau_apprenant']); ?>">
+                    <input type="text" name="updateNumPEApprenant" value="<?php echo htmlspecialchars($resultsId['num_PE_apprenant']); ?>">
+                    <input type="text" name="updateNumSecuApprenant" value="<?php echo htmlspecialchars($resultsId['num_secu_apprenant']); ?>">
+                    <input type="text" name="updateRibApprenant" value="<?php echo htmlspecialchars($resultsId['rib_apprenant']); ?>">
 
                     <select name="roleApprenant" id="idroleApprenant">
                         <?php
                         $sql = "SELECT `id_role`, `nom_role` FROM `role`";
-                        $requete = $bdd->query($sql);
+                        $requete = $bdd->prepare($sql);
+                        $requete->execute();
                         $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                         foreach ($results as $value) {
                             $selected = ($value['id_role'] == $resultsId['id_role']) ? 'selected' : '';
-                            echo '<option value="' . $value['id_role'] . '" ' . $selected . '>' . $value['nom_role'] . '</option>';
+                            echo '<option value="' . htmlspecialchars($value['id_role']) . '" ' . $selected . '>' . htmlspecialchars($value['nom_role']) . '</option>';
                         }
                         ?>
                     </select>
@@ -270,51 +289,67 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                     <select name="sessionApprenant" id="idSessionApprenant">
                         <?php
                         $sql = "SELECT `id_session`, `nom_session` FROM `session`";
-                        $requete = $bdd->query($sql);
+                        $requete = $bdd->prepare($sql);
+                        $requete->execute();
                         $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                         foreach ($results as $value) {
                             $selected = ($value['id_session'] == $resultsId['id_session']) ? 'selected' : '';
-                            echo '<option value="' . $value['id_session'] . '" ' . $selected . '>' . $value['nom_session'] . '</option>';
+                            echo '<option value="' . htmlspecialchars($value['id_session']) . '" ' . $selected . '>' . htmlspecialchars($value['nom_session']) . '</option>';
                         }
                         ?>
                     </select>
                     <input type="submit" name="updateApprenant" value="Modifier">
                 </form>
-        <?php
+
+                <?php
 
                 if (isset($_POST['updateApprenant'])) {
-                    $updateIdApprenant = $_POST['updateIdApprenant'];
-                    $updateNomApprenant = $_POST['updateNomApprenant'];
-                    $updatePrenomApprenant = $_POST['updatePrenomApprenant'];
-                    $updateMailApprenant = $_POST['updateMailApprenant'];
-                    $updateAdresseApprenant = $_POST['updateAdresseApprenant'];
-                    $updateVilleApprenant = $_POST['updateVilleApprenant'];
-                    $updateCodePostalApprenant = $_POST['updateCodePostalApprenant'];
-                    $updateTelApprenant = $_POST['updateTelApprenant'];
-                    $updateDateNaissanceApprenant = $_POST['updateDateNaissanceApprenant'];
-                    $updateNiveauApprenant = $_POST['updateNiveauApprenant'];
-                    $updateNumPEApprenant = $_POST['updateNumPEApprenant'];
-                    $updateNumSecuApprenant = $_POST['updateNumSecuApprenant'];
-                    $updateRibApprenant = $_POST['updateRibApprenant'];
+                    $updateIdApprenant = htmlspecialchars($_POST['updateIdApprenant']);
+                    $updateNomApprenant = htmlspecialchars($_POST['updateNomApprenant']);
+                    $updatePrenomApprenant = htmlspecialchars($_POST['updatePrenomApprenant']);
+                    $updateMailApprenant = htmlspecialchars($_POST['updateMailApprenant']);
+                    $updateAdresseApprenant = htmlspecialchars($_POST['updateAdresseApprenant']);
+                    $updateVilleApprenant = htmlspecialchars($_POST['updateVilleApprenant']);
+                    $updateCodePostalApprenant = htmlspecialchars($_POST['updateCodePostalApprenant']);
+                    $updateTelApprenant = htmlspecialchars($_POST['updateTelApprenant']);
+                    $updateDateNaissanceApprenant = htmlspecialchars($_POST['updateDateNaissanceApprenant']);
+                    $updateNiveauApprenant = htmlspecialchars($_POST['updateNiveauApprenant']);
+                    $updateNumPEApprenant = htmlspecialchars($_POST['updateNumPEApprenant']);
+                    $updateNumSecuApprenant = htmlspecialchars($_POST['updateNumSecuApprenant']);
+                    $updateRibApprenant = htmlspecialchars($_POST['updateRibApprenant']);
 
                     $sqlUpdate = "UPDATE `apprenants` 
-                                            SET 
-                                            `nom_apprenant` = '$updateNomApprenant',
-                                            `prenom_apprenant` = '$updatePrenomApprenant',
-                                            `mail_apprenant` = '$updateMailApprenant',
-                                            `adresse_apprenant` = '$updateAdresseApprenant',
-                                            `ville_apprenant` = '$updateVilleApprenant',
-                                            `code_postal_apprenant` = '$updateCodePostalApprenant',
-                                            `tel_apprenant` = '$updateTelApprenant',
-                                            `date_naissance_apprenant` = '$updateDateNaissanceApprenant',
-                                            `niveau_apprenant` = '$updateNiveauApprenant',
-                                            `num_PE_apprenant` = '$updateNumPEApprenant',
-                                            `num_secu_apprenant` = '$updateNumSecuApprenant',
-                                            `rib_apprenant` = '$updateRibApprenant'
-                                            WHERE  `id_apprenant` = $updateIdApprenant";
+                                SET 
+                                `nom_apprenant` = :updateNomApprenant,
+                                `prenom_apprenant` = :updatePrenomApprenant,
+                                `mail_apprenant` = :updateMailApprenant,
+                                `adresse_apprenant` = :updateAdresseApprenant,
+                                `ville_apprenant` = :updateVilleApprenant,
+                                `code_postal_apprenant` = :updateCodePostalApprenant,
+                                `tel_apprenant` = :updateTelApprenant,
+                                `date_naissance_apprenant` = :updateDateNaissanceApprenant,
+                                `niveau_apprenant` = :updateNiveauApprenant,
+                                `num_PE_apprenant` = :updateNumPEApprenant,
+                                `num_secu_apprenant` = :updateNumSecuApprenant,
+                                `rib_apprenant` = :updateRibApprenant
+                                WHERE  `id_apprenant` = :updateIdApprenant";
 
-                    if ($bdd->query($sqlUpdate)) {
+                    $requeteUpdate = $bdd->prepare($sqlUpdate);
+                    $requeteUpdate->bindParam(':updateNomApprenant', $updateNomApprenant);
+                    $requeteUpdate->bindParam(':updatePrenomApprenant', $updatePrenomApprenant);
+                    $requeteUpdate->bindParam(':updateMailApprenant', $updateMailApprenant);
+                    $requeteUpdate->bindParam(':updateAdresseApprenant', $updateAdresseApprenant);
+                    $requeteUpdate->bindParam(':updateVilleApprenant', $updateVilleApprenant);
+                    $requeteUpdate->bindParam(':updateCodePostalApprenant', $updateCodePostalApprenant);
+                    $requeteUpdate->bindParam(':updateTelApprenant', $updateTelApprenant);
+                    $requeteUpdate->bindParam(':updateDateNaissanceApprenant', $updateDateNaissanceApprenant);
+                    $requeteUpdate->bindParam(':updateNiveauApprenant', $updateNiveauApprenant);
+                    $requeteUpdate->bindParam(':updateNumPEApprenant', $updateNumPEApprenant);
+                    $requeteUpdate->bindParam(':updateNumSecuApprenant', $updateNumSecuApprenant);
+                    $requeteUpdate->bindParam(':updateRibApprenant', $updateRibApprenant);
+                    $requeteUpdate->bindParam(':updateIdApprenant', $updateIdApprenant);
+                    if ($requeteUpdate->execute()) {
                         echo "Le centre a été mis à jour dans la BDD.";
                     } else {
                         echo "Erreur lors de la mise à jour du centre.";
@@ -325,3 +360,4 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
         ?>
         </article>
     </main>
+    <?php

@@ -2,7 +2,7 @@
 // Gestion formation
 if (isset($_GET["page"]) && $_GET["page"] == "formations") {
 
-?>
+    ?>
     <main>
         <h1>Gestion des formations</h1>
         <form method="POST">
@@ -55,25 +55,25 @@ if (isset($_GET["page"]) && $_GET["page"] == "formations") {
                                 echo '<tr>';
 
                                 // Input hidden pour stocker l'ID de la formation
-                                echo '<input type="hidden" name="hiddenFormation" value="' . $value['id_formation'] . '">';
+                                echo '<input type="hidden" name="hiddenFormation" value="' . htmlspecialchars($value['id_formation']) . '">';
 
                                 // Affichage du nom de la formation
-                                echo '<td>' . $value['nom_formation'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['nom_formation']) . '</td>';
 
                                 // Affichage diplôme de la formation
-                                echo '<td>' . $value['duree_formation'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['duree_formation']) . '</td>';
 
                                 // Affichage du nom de la formation
-                                echo '<td>' . $value['niveau_sortie_formation'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['niveau_sortie_formation']) . '</td>';
 
                                 // Affichage description de la formation
-                                echo '<td>' . $value['description'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['description']) . '</td>';
 
                                 // Bouton Modifier
-                                echo '<td><a href="?page=formations&type=modifier&id=' . $value['id_formation'] . '" class="modifier">Modifier</a></td>';
+                                echo '<td><a href="?page=formations&type=modifier&id=' . htmlspecialchars($value['id_formation']) . '" class="modifier">Modifier</a></td>';
 
                                 // Bouton Supprimer
-                                echo '<td><button type="submit" name="deleteFormation" value="' . $value['id_formation'] . '" class="supprimer">Supprimer</button></td>';
+                                echo '<td><button type="submit" name="deleteFormation" value="' . htmlspecialchars($value['id_formation']) . '" class="supprimer">Supprimer</button></td>';
 
                                 // Fermeture de la ligne du tableau
                                 echo '</tr>';
@@ -91,8 +91,10 @@ if (isset($_GET["page"]) && $_GET["page"] == "formations") {
                 $niveauSortieFormation = $_POST['niveauSortieFormation'];
                 $descriptionFormation = $_POST['descriptionFormation'];
 
-                $sql = "INSERT INTO `formations`(`nom_formation`, `duree_formation`, `niveau_sortie_formation`, `description`) VALUES ('$nomFormation','$dureeFormation',' $niveauSortieFormation','$descriptionFormation')";
-                $bdd->query($sql);
+                // Requête préparée pour l'insertion
+                $sql = "INSERT INTO `formations`(`nom_formation`, `duree_formation`, `niveau_sortie_formation`, `description`) VALUES (?, ?, ?, ?)";
+                $stmt = $bdd->prepare($sql);
+                $stmt->execute([$nomFormation, $dureeFormation, $niveauSortieFormation, $descriptionFormation]);
                 echo "data ajoutée dans la bdd";
             }
 
@@ -100,8 +102,10 @@ if (isset($_GET["page"]) && $_GET["page"] == "formations") {
             if (isset($_POST['deleteFormation'])) {
                 $idFormationDelete = $_POST['deleteFormation'];
 
-                $sql = "DELETE FROM `formations` WHERE `id_formation` = $idFormationDelete";
-                if ($bdd->query($sql)) {
+                // Requête préparée pour la suppression
+                $sql = "DELETE FROM `formations` WHERE `id_formation` = ?";
+                $stmt = $bdd->prepare($sql);
+                if ($stmt->execute([$idFormationDelete])) {
                     echo "La formation a été supprimée de la BDD.";
                 } else {
                     echo "Erreur lors de la suppression de la formation.";
@@ -110,22 +114,24 @@ if (isset($_GET["page"]) && $_GET["page"] == "formations") {
 
             if (isset($_GET['type']) && $_GET['type'] == "modifier") {
                 $id = $_GET['id'];
-                $sqlId = "SELECT * FROM `formations` WHERE `id_formation` = $id";
-                $requeteId = $bdd->query($sqlId);
-                $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
+                // Requête préparée pour la récupération des données à modifier
+                $sqlId = "SELECT * FROM `formations` WHERE `id_formation` = ?";
+                $stmtId = $bdd->prepare($sqlId);
+                $stmtId->execute([$id]);
+                $resultsId = $stmtId->fetch(PDO::FETCH_ASSOC);
 
             ?>
 
                 <form method="POST">
-                    <input type="hidden" name="updateIdFormation" value="<?php echo $resultsId['id_formation']; ?>">
-                    <input type="text" name="updateNomFormation" value="<?php echo $resultsId['nom_formation']; ?>">
-                    <input type="text" name="updateDureeFormation" value="<?php echo $resultsId['duree_formation']; ?>">
-                    <input type="text" name="updateNiveauSortieFormation" value="<?php echo $resultsId['niveau_sortie_formation']; ?>">
-                    <input type="text" name="updateDescriptionFormation" value="<?php echo $resultsId['description']; ?>">
+                    <input type="hidden" name="updateIdFormation" value="<?php echo htmlspecialchars($resultsId['id_formation']); ?>">
+                    <input type="text" name="updateNomFormation" value="<?php echo htmlspecialchars($resultsId['nom_formation']); ?>">
+                    <input type="text" name="updateDureeFormation" value="<?php echo htmlspecialchars($resultsId['duree_formation']); ?>">
+                    <input type="text" name="updateNiveauSortieFormation" value="<?php echo htmlspecialchars($resultsId['niveau_sortie_formation']); ?>">
+                    <input type="text" name="updateDescriptionFormation" value="<?php echo htmlspecialchars($resultsId['description']); ?>">
                     <input type="submit" name="updateFormation" value="Modifier">
                 </form>
 
-        <?php
+                <?php
 
                 if (isset($_POST['updateFormation'])) {
                     $idFormationUpdate = $_POST['updateIdFormation'];
@@ -134,15 +140,16 @@ if (isset($_GET["page"]) && $_GET["page"] == "formations") {
                     $niveauSortieFormationUpdate = $_POST['updateNiveauSortieFormation'];
                     $descriptionFormationUpdate = $_POST['updateDescriptionFormation'];
 
+                    // Requête préparée pour la mise à jour
                     $sqlUpdate = "UPDATE `formations` 
                                         SET 
-                                            `nom_formation` = '$nomFormationUpdate',
-                                            `duree_formation` = '$dureeFormationUpdate',
-                                            `niveau_sortie_formation` = '$niveauSortieFormationUpdate',
-                                            `description` = '$descriptionFormationUpdate'
-                                        WHERE `id_formation` = $idFormationUpdate";
-
-                    if ($bdd->query($sqlUpdate)) {
+                                            `nom_formation` = ?,
+                                            `duree_formation` = ?,
+                                            `niveau_sortie_formation` = ?,
+                                            `description` = ?
+                                        WHERE `id_formation` = ?";
+                    $stmtUpdate = $bdd->prepare($sqlUpdate);
+                    if ($stmtUpdate->execute([$nomFormationUpdate, $dureeFormationUpdate, $niveauSortieFormationUpdate, $descriptionFormationUpdate, $idFormationUpdate])) {
                         echo "La formation a été mise à jour dans la BDD.";
                     } else {
                         echo "Erreur lors de la mise à jour de la formation.";
