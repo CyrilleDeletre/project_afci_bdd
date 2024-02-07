@@ -8,7 +8,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
             <fieldset>
                 <legend>Affectez des membres de l'équipe pédagogique à des centres</legend>
 
-                <label for="idPedago">Séléctionnez un membre de l'équipe pédagogique</label>
+                <label for="idPedago">Sélectionnez un membre de l'équipe pédagogique</label>
                 <select name="idAssociationPedago" id="idPedago">
                     <option value="" hidden>Membre</option>
                     <?php
@@ -17,26 +17,28 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
                                         FROM `pedagogie`
                                         INNER JOIN `role`
                                         ON pedagogie.id_role = role.id_role";
-                    $requete = $bdd->query($sql);
+                    $requete = $bdd->prepare($sql);
+                    $requete->execute();
                     $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($results as $value) {
-                        echo '<option value="' . $value['id_pedagogie'] . '">' . $value['pedago'] . '</option>';
+                        echo '<option value="' . htmlspecialchars($value['id_pedagogie']) . '">' . htmlspecialchars($value['pedago']) . '</option>';
                     }
                     ?>
                 </select>
 
-                <label for="idCentre">Séléctionnez un centre</label>
+                <label for="idCentre">Sélectionnez un centre</label>
                 <select name="idAssociationCentre" id="idCentre">
                     <option value="" hidden>Nom du centre</option>
                     <?php
 
                     $sql = "SELECT `id_centre`, `ville_centre` FROM centres";
-                    $requete = $bdd->query($sql);
+                    $requete = $bdd->prepare($sql);
+                    $requete->execute();
                     $results = $requete->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($results as $value) {
-                        echo '<option value="' . $value['id_centre'] . '">' . 'AFCI' . ' - ' . $value['ville_centre'] . '</option>';
+                        echo '<option value="' . htmlspecialchars($value['id_centre']) . '">' . 'AFCI' . ' - ' . htmlspecialchars($value['ville_centre']) . '</option>';
                     }
                     ?>
                 </select>
@@ -71,7 +73,8 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
                                         INNER JOIN role ON pedagogie.id_role = role.id_role
                                         ORDER BY `affecter`.`id_pedagogie` ASC";
 
-                            $requete = $bdd->query($sql);
+                            $requete = $bdd->prepare($sql);
+                            $requete->execute();
                             $results = $requete->fetchAll(PDO::FETCH_ASSOC);
                             // Afficher chaque ligne de la table
                             foreach ($results as $value) {
@@ -79,22 +82,22 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
                                 echo '<tr>';
 
                                 // Affichage du role
-                                echo '<td>' . $value['nom_role'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['nom_role']) . '</td>';
 
                                 // Affichage du nom
-                                echo '<td>' . $value['nom_pedagogie'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['nom_pedagogie']) . '</td>';
 
                                 // Affichage du prénom
-                                echo '<td>' . $value['prenom_pedagogie'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['prenom_pedagogie']) . '</td>';
 
                                 // Affichage de la ville
-                                echo '<td>' . $value['ville_centre'] . '</td>';
+                                echo '<td>' . htmlspecialchars($value['ville_centre']) . '</td>';
 
                                 // Bouton Modifier
-                                echo '<td><a href="?page=affectations&type=modifier&id=' . $value['id_pedagogie'] . '&' . $value['id_centre'] . '" class="modifier">Modifier</a></td>';
+                                echo '<td><a href="?page=affectations&type=modifier&id=' . htmlspecialchars($value['id_pedagogie']) . '&' . htmlspecialchars($value['id_centre']) . '" class="modifier">Modifier</a></td>';
 
                                 // Bouton Supprimer
-                                echo '<td><button type="submit" name="deleteAffectation" value="' . $value['id_pedagogie'] . '_' . $value['id_centre'] . '" class="supprimer">Supprimer</button></td>';
+                                echo '<td><button type="submit" name="deleteAffectation" value="' . htmlspecialchars($value['id_pedagogie']) . '_' . htmlspecialchars($value['id_centre']) . '" class="supprimer">Supprimer</button></td>';
 
                                 // Fermeture de la ligne du tableau
                                 echo '</tr>';
@@ -169,7 +172,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
 
                             foreach ($results as $value) {
                                 $selected = ($value['id_pedagogie'] == $resultsId['id_pedagogie']) ? 'selected' : '';
-                                echo '<option value="' . $value['id_pedagogie'] . '" ' . $selected . '>' . $value['pedago'] . '</option>';
+                                echo '<option value="' . htmlspecialchars($value['id_pedagogie']) . '" ' . $selected . '>' . htmlspecialchars($value['pedago']) . '</option>';
                             }
                             ?>
                         </select>
@@ -185,10 +188,12 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
 
                             foreach ($results as $value) {
                                 $selected = ($value['id_centre'] == $resultsId['id_centre']) ? 'selected' : '';
-                                echo '<option value="' . $value['id_centre'] . '" ' . $selected . '>' . 'AFCI' . ' - ' . $value['ville_centre'] . '</option>';
+                                echo '<option value="' . htmlspecialchars($value['id_centre']) . '" ' . $selected . '>' . 'AFCI' . ' - ' . htmlspecialchars($value['ville_centre']) . '</option>';
                             }
                             ?>
                         </select>
+
+                        <input type="hidden" name="updateIdAssociation" value="<?php echo htmlspecialchars($id); ?>">
 
                         <input type="submit" name="updateAffectation" value="Modifier">
                     </form>
