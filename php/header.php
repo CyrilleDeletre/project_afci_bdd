@@ -1,6 +1,7 @@
 <header>
     <nav>
         <ul>
+            <li><a href="?page=home">Accueil</a></li>
             <li><a href="?page=roles">Rôles</a></li>
             <li><a href="?page=centres">Centres</a></li>
             <li><a href="?page=affectations">Affectations</a></li>
