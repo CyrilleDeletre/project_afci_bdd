@@ -40,10 +40,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "centres") {
                         <tbody>
                             <?php
                             // Récupérer les données depuis la base de données
-                            $sql = "SELECT * FROM `centres`";
-                            $requete = $bdd->prepare($sql);
-                            $requete->execute();
-                            $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                            $results = read("centres");
 
                             // Afficher chaque ligne de la table
                             foreach ($results as $value) {

@@ -11,3 +11,13 @@ $bdd = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user,
 // Configuration des options PDO
 $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+function read($table)
+{
+    $sql = "SELECT * FROM $table";
+
+    global $bdd;
+    $requete = $bdd->prepare($sql);
+    $requete->execute();
+    return $requete->fetchAll(PDO::FETCH_ASSOC);
+}

@@ -45,10 +45,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "formations") {
                         <tbody>
                             <?php
                             // Récupérer les données depuis la base de données
-                            $sql = "SELECT * FROM `formations`";
-                            $requete = $bdd->query($sql);
-                            $results = $requete->fetchAll(PDO::FETCH_ASSOC);
-
+                            $results = read("formations");
                             // Afficher chaque ligne de la table
                             foreach ($results as $value) {
                                 // Créer la ligne du tableau pour chaque entrée

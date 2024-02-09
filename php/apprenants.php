@@ -49,10 +49,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                     <option value="" hidden>Choisissez une session</option>
 
                     <?php
-                    $sql = "SELECT `id_session`, `nom_session` FROM `session`";
-                    $requete = $bdd->prepare($sql);
-                    $requete->execute();
-                    $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                    $results = read("session");
 
                     foreach ($results as $value) {
                         echo '<option value="' . htmlspecialchars($value['id_session']) . '">' . htmlspecialchars($value['nom_session']) . '</option>';
@@ -255,7 +252,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                 $requeteId->bindParam(':id', $id);
                 $requeteId->execute();
                 $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
-                ?>
+            ?>
 
                 <form method="POST">
                     <input type="hidden" name="updateIdApprenant" value="<?php echo htmlspecialchars($resultsId['id_apprenant']); ?>">
@@ -302,7 +299,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "apprenants") {
                     <input type="submit" name="updateApprenant" value="Modifier">
                 </form>
 
-                <?php
+        <?php
 
                 if (isset($_POST['updateApprenant'])) {
                     $updateIdApprenant = htmlspecialchars($_POST['updateIdApprenant']);

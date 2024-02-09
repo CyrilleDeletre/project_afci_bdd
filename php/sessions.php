@@ -18,10 +18,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "sessions") {
                 <select name="centre" id="idCentre">
                     <option value="" hidden>Nom du centre</option>
                     <?php
-                    $sql = "SELECT `id_centre`, `ville_centre` FROM centres";
-                    $requete = $bdd->prepare($sql);
-                    $requete->execute();
-                    $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                    $results = read("centres");
 
                     foreach ($results as $value) {
                         echo '<option value="' . htmlspecialchars($value['id_centre'], ENT_QUOTES) . '">' . 'AFCI' . ' - ' . htmlspecialchars($value['ville_centre'], ENT_QUOTES) . '</option>';
@@ -33,10 +30,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "sessions") {
                 <select name="formation" id="idFormation">
                     <option value="" hidden>Nom de la formation</option>
                     <?php
-                    $sql = "SELECT `id_formation`, `nom_formation` FROM formations";
-                    $requete = $bdd->prepare($sql);
-                    $requete->execute();
-                    $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                    $results = read("formations");
 
                     foreach ($results as $value) {
                         echo '<option value="' . htmlspecialchars($value['id_formation'], ENT_QUOTES) . '">' . htmlspecialchars($value['nom_formation'], ENT_QUOTES) . '</option>';

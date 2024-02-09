@@ -32,10 +32,9 @@ if (isset($_GET["page"]) && $_GET["page"] == "roles") {
                         <tbody>
                             <?php
                             // Récupérer les données depuis la base de données
-                            $sql = "SELECT * FROM `role`";
-                            $requete = $bdd->prepare($sql);
-                            $requete->execute();
-                            $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                            // $sql = "SELECT * FROM `role`";
+       
+                            $results = read("role");
 
                             // Afficher chaque ligne de la table
                             foreach ($results as $value) {
@@ -94,13 +93,13 @@ if (isset($_GET["page"]) && $_GET["page"] == "roles") {
                     $resultsId = $requeteId->fetch(PDO::FETCH_ASSOC);
 
                     // Affichage du formulaire de mise à jour
-                    ?>
+            ?>
                     <form method="POST">
                         <input type="hidden" name="updateIdRole" value="<?php echo htmlspecialchars($resultsId['id_role']); ?>">
                         <input type="text" name="updateNomRole" value="<?php echo htmlspecialchars($resultsId['nom_role']); ?>">
                         <input type="submit" name="updateRole" value="Modifier">
                     </form>
-            <?php
+        <?php
                     // Traitement de la soumission du formulaire de mise à jour
                     if (isset($_POST["updateRole"])) {
                         $idRoleUpdate = intval($_POST['updateIdRole']); // Assurez-vous que l'ID est un entier
@@ -118,7 +117,6 @@ if (isset($_GET["page"]) && $_GET["page"] == "roles") {
                 }
             }
         }
-            ?>
+        ?>
         </article>
     </main>
-

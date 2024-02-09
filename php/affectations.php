@@ -32,10 +32,7 @@ if (isset($_GET["page"]) && $_GET["page"] == "affectations") {
                     <option value="" hidden>Nom du centre</option>
                     <?php
 
-                    $sql = "SELECT `id_centre`, `ville_centre` FROM centres";
-                    $requete = $bdd->prepare($sql);
-                    $requete->execute();
-                    $results = $requete->fetchAll(PDO::FETCH_ASSOC);
+                    $results = read("centres");
 
                     foreach ($results as $value) {
                         echo '<option value="' . htmlspecialchars($value['id_centre']) . '">' . 'AFCI' . ' - ' . htmlspecialchars($value['ville_centre']) . '</option>';
