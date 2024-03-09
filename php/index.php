@@ -11,7 +11,6 @@
 <body>
 
     <?php
-    
     include 'header.php';
     include 'pdo.php';
     include 'roles.php';
@@ -21,6 +20,7 @@
     include 'equipe_pedagogique.php';
     include 'sessions.php';
     include 'apprenants.php';
+    include 'poo.php';
     
     if (isset($_GET["page"]) && $_GET["page"] == "home") {
     ?>
